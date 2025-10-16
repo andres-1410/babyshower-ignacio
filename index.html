@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Shower de Ignacio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>Baby Shower de Ignacio</h1>
+        <nav>
+            <a href="#bienvenida">Bienvenida</a>
+            <a href="#regalos">Lista de Regalos</a>
+            <a href="#rsvp">Confirma tu Asistencia</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="bienvenida">
+            <h2>Nuestra familia crece... ¡y la emoción también!</h2>
+            <p>Pronto seremos uno más en casa, y nuestro corazón no puede estar más lleno. Queremos que seas parte de esta felicidad en el baby shower de nuestro pequeño Ignacio. ¡Prepárate para una tarde de risas, buena compañía y mucha ternura!</p>
+            <div class="event-details">
+                <p><strong>Fecha:</strong> Sábado, 30 de Noviembre de 2025</p>
+                <p><strong>Hora:</strong> [Escribe aquí la hora]</p>
+                <p><strong>Lugar:</strong> [Escribe aquí la dirección]</p>
+            </div>
+        </section>
+
+        <section id="regalos">
+            <h2>Un pequeño empujón para nuestro gran comienzo</h2>
+            <p>Su presencia es, sin duda, el mejor regalo que podemos recibir. Si además desean tener un detalle con nuestro bebé, hemos creado con mucho cariño esta lista de cositas que nos serán de gran ayuda. Para evitar regalos repetidos, pueden seleccionar aquí lo que deseen aportar. ¡Gracias desde el fondo de nuestro corazón!</p>
+            <div id="lista-regalos-container" class="cards-container">
+                </div>
+        </section>
+
+        <section id="rsvp">
+            <h2>¿Nos acompañas?</h2>
+            <p>Por favor, ayúdanos a que todo sea perfecto confirmando tu asistencia antes del 20 de Noviembre. ¡Esperamos verte ahí!</p>
+            <form id="rsvp-form">
+                <input type="text" id="nombre-invitado" placeholder="Tu nombre completo" required>
+                <input type="number" id="cantidad-asistentes" placeholder="¿Cuántos asisten?" min="1" required>
+                <textarea id="mensaje-invitado" placeholder="Déjanos un mensaje (opcional)"></textarea>
+                <button type="submit">Confirmar Asistencia</button>
+                <p id="form-response"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>Hecho con ❤️ por sus papás, Andrés e Ysleidid</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
