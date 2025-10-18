@@ -194,3 +194,31 @@ footer {
     font-size: 0.9em;
     color: var(--primary-green);
 }
+/* --- AÑADE ESTO AL FINAL DE TU STYLE.CSS --- */
+
+/* Estilos para los nuevos checkboxes de invitados */
+#guest-checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+}
+.checkbox-wrapper input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+.checkbox-wrapper label {
+    font-weight: normal;
+    font-size: 1.1em;
+    color: #333;
+}
