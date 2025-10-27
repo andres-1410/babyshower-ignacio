@@ -2,9 +2,8 @@
 // El ID largo en la URL de tu Google Sheet (ej: .../spreadsheets/d/AQUI_VA_EL_ID/edit)
 const GOOGLE_SHEET_ID = "14yEBkFmzQP9jSb867ylhNDI-eRFuGwHXBp6V5ZJ6w2k"; 
 // La URL de tu aplicación web implementada desde Apps Script (LA NUEVA)
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRgZqlgb5k5WXv_X0kTRNqzvsZ8x4B-9Irt4z3-VQP-Ne_QcjBik4HJMt6dbAfHtbp/exec"; 
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHVbHnqGaOBUX0Rka34C30C2IZZ5xZmZyQ2VmnAa8A13lsJQFAy_ge0OB6Xg0z1qjD/exec"; 
 
-const giftsCsvUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Regalos`;
 
 // --- VARIABLES GLOBALES ---
 let guestList = [];
@@ -12,24 +11,36 @@ let selectedGuest = null;
 
 // --- FUNCIONES DE INICIALIZACIÓN ---
 document.addEventListener('DOMContentLoaded', () => {
-    fetchGuests();
-    fetchAndDisplayGifts();
-    
+    fetchInitialData(); // <-- Única función de carga
+
     document.getElementById('guest-search').addEventListener('keyup', handleSearch);
     document.getElementById('rsvp-form').addEventListener('submit', handleRsvpSubmit);
+
+    // Lógica para mostrar el mapa
+    const showMapBtn = document.getElementById('show-map-button');
+    const mapWrapper = document.getElementById('map-iframe-wrapper');
+
+    showMapBtn.addEventListener('click', () => {
+        mapWrapper.classList.remove('hidden'); 
+        showMapBtn.classList.add('hidden'); 
+    });
 });
 
-async function fetchGuests() {
+// --- FUNCIÓN MODIFICADA: AHORA CARGA TODO ---
+async function fetchInitialData() {
     try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL); 
         const result = await response.json();
+        
         if (result.status === 'success') {
-            guestList = result.data;
+            // Surtimos ambas listas con los datos recibidos
+            guestList = result.data.guests;
+            populateAlreadyHaveGifts(result.data.gifts); // <-- Nueva llamada
         } else {
-            console.error("Error al cargar la lista de invitados:", result.message);
+            console.error("Error al cargar datos iniciales:", result.message);
         }
     } catch (error) {
-        console.error("Error de conexión al cargar invitados:", error);
+        console.error("Error de conexión al cargar datos:", error);
     }
 }
 
@@ -42,11 +53,9 @@ function handleSearch(event) {
         resultsContainer.innerHTML = '';
         return;
     }
-
     const filteredGuests = guestList.filter(guest => 
         guest.nombre.toLowerCase().includes(searchTerm)
     );
-
     resultsContainer.innerHTML = '';
     filteredGuests.forEach(guest => {
         const item = document.createElement('div');
@@ -57,8 +66,6 @@ function handleSearch(event) {
     });
 }
 
-// --- FUNCIÓN ACTUALIZADA ---
-// Ahora crea checkboxes dinámicamente
 function selectGuest(guest) {
     selectedGuest = guest;
     
@@ -71,29 +78,25 @@ function selectGuest(guest) {
     document.getElementById('guest-name-display').textContent = `Confirmación para: ${guest.nombre}`;
     document.getElementById('guest-id').value = guest.id;
 
-    // --- LÓGICA NUEVA ---
     const checkboxContainer = document.getElementById('guest-checkbox-container');
-    checkboxContainer.innerHTML = ''; // Limpiar checkboxes anteriores
+    checkboxContainer.innerHTML = ''; 
     
-    // Obtenemos los nombres del string "Andrés, Ysleidid" y los convertimos en un array
     const names = guest.nombres_asignados.split(',').map(name => name.trim());
     
-    // Creamos un checkbox por cada nombre
     names.forEach((name, index) => {
-        if(name) { // Evitar crear checkboxes vacíos si hay comas extra
+        if(name) { 
             const wrapper = document.createElement('div');
             wrapper.className = 'checkbox-wrapper';
+            // ORDEN CAMBIADO: Label primero, Input después
             wrapper.innerHTML = `
-                <input type="checkbox" id="guest_${index}" value="${name}" checked>
                 <label for="guest_${index}">${name}</label>
+                <input type="checkbox" id="guest_${index}" value="${name}" checked>
             `;
             checkboxContainer.appendChild(wrapper);
         }
     });
 }
 
-// --- FUNCIÓN ACTUALIZADA ---
-// Ahora lee los checkboxes en lugar de un número
 async function handleRsvpSubmit(event) {
     event.preventDefault();
     if (!selectedGuest) {
@@ -106,8 +109,6 @@ async function handleRsvpSubmit(event) {
     button.disabled = true;
     button.textContent = 'Enviando...';
 
-    // --- LÓGICA NUEVA ---
-    // Recolectamos los nombres de los checkboxes que están marcados
     const confirmedNames = [];
     const checkboxes = document.querySelectorAll('#guest-checkbox-container input[type="checkbox"]:checked');
     checkboxes.forEach(checkbox => {
@@ -117,11 +118,10 @@ async function handleRsvpSubmit(event) {
     const data = {
         action: 'submitRsvp',
         guestId: selectedGuest.id,
-        confirmedNames: confirmedNames, // Enviamos el array de nombres
+        confirmedNames: confirmedNames, 
         mensaje: document.getElementById('mensaje-invitado').value
     };
     
-    // --- LÓGICA RESTANTE (sin cambios) ---
     try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST',
@@ -147,77 +147,29 @@ async function handleRsvpSubmit(event) {
 }
 
 
-// --- LÓGICA DE LISTA DE REGALOS (sin cambios) ---
-async function fetchAndDisplayGifts() {
-    const container = document.getElementById('lista-regalos-container');
-    container.innerHTML = '<p>Cargando regalos...</p>';
+// --- LÓGICA MODIFICADA PARA LISTA "YA TENEMOS" ---
+// Ya no hace 'fetch', solo recibe los datos y los muestra
+function populateAlreadyHaveGifts(gifts) {
+    const container = document.getElementById('ya-tenemos-container');
     try {
-        const response = await fetch(giftsCsvUrl);
-        if (!response.ok) throw new Error('Error al cargar la lista.');
-        const csvText = await response.text();
-        const gifts = parseCsv(csvText);
-        container.innerHTML = '';
+        container.innerHTML = ''; // Limpiamos el mensaje "Cargando..."
+        
+        const list = document.createElement('ul');
+        list.className = 'no-gift-list'; // Usamos la misma clase de CSS
+        
         gifts.forEach(gift => {
-            const disponible = gift.necesarios - gift.reservados;
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${gift.foto}" alt="${gift.nombre}">
-                <div class="card-content">
-                    <h3>${gift.nombre}</h3>
-                    <p>${gift.descripcion}</p>
-                </div>
-                <div class="card-footer">
-                    <span>Disponibles: ${disponible}</span>
-                    <button id="btn-${gift.id}" ${disponible <= 0 ? 'disabled' : ''}>
-                        ${disponible <= 0 ? 'Reservado' : 'Reservar'}
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
-            if (disponible > 0) {
-                document.getElementById(`btn-${gift.id}`).addEventListener('click', () => reserveGift(gift.id));
+            if(gift.nombre) { 
+                const item = document.createElement('li');
+                item.textContent = gift.nombre; // Solo mostramos el nombre
+                list.appendChild(item);
             }
         });
+        
+        container.appendChild(list);
+
     } catch (error) {
-        container.innerHTML = `<p>No se pudieron cargar los regalos.</p>`;
-        console.error('Error fetching gifts:', error);
+        container.innerHTML = `<p>Error al mostrar la lista de regalos que ya tenemos.</p>`;
+        console.error('Error populating gifts:', error);
     }
 }
 
-async function reserveGift(giftId) {
-    const button = document.getElementById(`btn-${giftId}`);
-    button.disabled = true;
-    button.textContent = 'Reservando...';
-    try {
-        await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: 'reserveGift', giftId: giftId })
-        });
-        setTimeout(() => {
-            alert('¡Gracias por tu regalo!');
-            fetchAndDisplayGifts();
-        }, 1500);
-    } catch (error) {
-        console.error('Error al reservar regalo:', error);
-        alert('Hubo un error al reservar. Por favor, intenta de nuevo.');
-        button.disabled = false;
-        button.textContent = 'Reservar';
-    }
-}
-
-function parseCsv(csvText) {
-    const lines = csvText.trim().split('\n');
-    const headers = lines[0].split(',').map(h => JSON.parse(h.trim()));
-    const data = [];
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => JSON.parse(v.trim()));
-        let obj = {};
-        headers.forEach((header, index) => {
-            obj[header] = values[index];
-        });
-        data.push(obj);
-    }
-    return data;
-}
