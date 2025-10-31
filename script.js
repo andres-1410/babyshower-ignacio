@@ -78,6 +78,9 @@ function handleSearch(event) {
 // ######################################################
 
 
+// ######################################################
+// ## REEMPLAZA TU FUNCIÓN selectGuest CON ESTA VERSIÓN ##
+// ######################################################
 function selectGuest(guest) {
     selectedGuest = guest;
     
@@ -91,9 +94,19 @@ function selectGuest(guest) {
     document.getElementById('guest-id').value = guest.id;
 
     const checkboxContainer = document.getElementById('guest-checkbox-container');
+    const checkboxTitle = document.getElementById('checkbox-title-label'); // NUEVO: Buscamos la etiqueta del título
     checkboxContainer.innerHTML = ''; 
     
     const names = guest.nombres_asignados.split(',').map(name => name.trim());
+    const numGuests = names.length; // NUEVO: Contamos cuántos nombres hay
+
+    // --- LÓGICA NUEVA PARA OCULTAR/MOSTRAR EL TÍTULO ---
+    if (numGuests <= 1) {
+        checkboxTitle.classList.add('hidden'); // Oculta el título si solo hay 1 invitado
+    } else {
+        checkboxTitle.classList.remove('hidden'); // Muestra el título si hay más de 1
+    }
+    // --- FIN DE LA LÓGICA NUEVA ---
     
     names.forEach((name, index) => {
         if(name) { 
@@ -108,6 +121,9 @@ function selectGuest(guest) {
         }
     });
 }
+// ######################################################
+// ## FIN DE LA MODIFICACIÓN ##
+// ######################################################
 
 async function handleRsvpSubmit(event) {
     event.preventDefault();
