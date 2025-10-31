@@ -44,11 +44,7 @@ async function fetchInitialData() {
     }
 }
 
-// --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA (RSVP) ---
 
-// ######################################################
-// ## FUNCIÓN MODIFICADA ##
-// ######################################################
 function handleSearch(event) {
     const searchTerm = event.target.value.toLowerCase();
     const resultsContainer = document.getElementById('search-results');
@@ -73,14 +69,8 @@ function handleSearch(event) {
         resultsContainer.appendChild(item);
     });
 }
-// ######################################################
-// ## FIN DE LA MODIFICACIÓN ##
-// ######################################################
 
 
-// ######################################################
-// ## REEMPLAZA TU FUNCIÓN selectGuest CON ESTA VERSIÓN ##
-// ######################################################
 function selectGuest(guest) {
     selectedGuest = guest;
     
@@ -103,8 +93,10 @@ function selectGuest(guest) {
     // --- LÓGICA NUEVA PARA OCULTAR/MOSTRAR EL TÍTULO ---
     if (numGuests <= 1) {
         checkboxTitle.classList.add('hidden'); // Oculta el título si solo hay 1 invitado
+        document.getElementById('guest-name-display').textContent = `Confirmación solo para: ${guest.nombre}`;
     } else {
         checkboxTitle.classList.remove('hidden'); // Muestra el título si hay más de 1
+        document.getElementById('guest-name-display').textContent = `Confirmación para: ${guest.nombre}`;
     }
     // --- FIN DE LA LÓGICA NUEVA ---
     
