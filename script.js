@@ -45,17 +45,25 @@ async function fetchInitialData() {
 }
 
 // --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA (RSVP) ---
+
+// ######################################################
+// ## FUNCIÓN MODIFICADA ##
+// ######################################################
 function handleSearch(event) {
     const searchTerm = event.target.value.toLowerCase();
     const resultsContainer = document.getElementById('search-results');
     
-    if (searchTerm.length < 2) {
+    // CAMBIADO A < 1: Permite buscar desde la primera letra
+    if (searchTerm.length < 3) { 
         resultsContainer.innerHTML = '';
         return;
     }
+
+    // CAMBIADO A startsWith(): Solo busca al principio del nombre
     const filteredGuests = guestList.filter(guest => 
-        guest.nombre.toLowerCase().includes(searchTerm)
+        guest.nombre.toLowerCase().startsWith(searchTerm)
     );
+
     resultsContainer.innerHTML = '';
     filteredGuests.forEach(guest => {
         const item = document.createElement('div');
@@ -65,6 +73,10 @@ function handleSearch(event) {
         resultsContainer.appendChild(item);
     });
 }
+// ######################################################
+// ## FIN DE LA MODIFICACIÓN ##
+// ######################################################
+
 
 function selectGuest(guest) {
     selectedGuest = guest;
@@ -148,7 +160,6 @@ async function handleRsvpSubmit(event) {
 
 
 // --- LÓGICA MODIFICADA PARA LISTA "YA TENEMOS" ---
-// Ya no hace 'fetch', solo recibe los datos y los muestra
 function populateAlreadyHaveGifts(gifts) {
     const container = document.getElementById('ya-tenemos-container');
     try {
@@ -172,4 +183,3 @@ function populateAlreadyHaveGifts(gifts) {
         console.error('Error populating gifts:', error);
     }
 }
-
