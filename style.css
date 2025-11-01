@@ -219,33 +219,51 @@ h2 {
 .checkbox-wrapper input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    flex-shrink: 0
+    flex-shrink: 0;
 
 }
 .checkbox-wrapper label {
     font-weight: normal;
     font-size: 1.1em;
     color: #333;
-    text-align: justify;
+    text-align: left;
 }
 
-/* --- ESTILOS NUEVOS PARA LA LISTA "NO REGALAR" --- */
+
+/* --- ESTILOS "NO REGALAR" (MODIFICADOS PARA SER MÁS SUTILES) --- */
 .no-gift-list {
     display: grid;
+    /* En PC se verá en columnas automáticas (como antes) */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
+    gap: 0.5rem 1.5rem; /* Menos espacio vertical, más horizontal */
     list-style-type: none;
     padding: 0;
     margin-top: 2rem;
     text-align: left;
 }
+
 .no-gift-list li {
-    background-color: var(--bg-color);
-    padding: 1.25rem;
-    border-radius: 8px;
-    font-weight: 500;
+    /* Estilos "ruidosos" eliminados: */
+    /* background-color: var(--bg-color); */
+    /* border-left: 5px solid var(--primary-green); */
+    
+    /* Nuevos estilos más sutiles: */
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.25rem; /* Padding reducido y espacio para el bullet */
+    font-weight: 400; /* Fuente más ligera */
     color: var(--text-brown);
-    border-left: 5px solid var(--primary-green);
+}
+
+/* Añadimos un "bullet" (viñeta) personalizado con el color del tema */
+.no-gift-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    color: var(--primary-green);
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1;
 }
 
 
@@ -269,5 +287,12 @@ footer {
     .map-container {
         margin-top: 2rem;
         border-width: 3px;
+    }
+
+    /* --- ¡NUEVA REGLA PARA MÓVIL! --- */
+    /* Forzamos la lista a 2 columnas en pantallas pequeñas */
+    .no-gift-list {
+        grid-template-columns: 1fr 1fr; /* 2 columnas fijas */
+        gap: 0.25rem 1rem; /* Espaciado más ajustado */
     }
 }
