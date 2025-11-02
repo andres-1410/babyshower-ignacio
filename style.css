@@ -4,7 +4,7 @@
     --primary-green: #A7B9A1;
     --dark-green: #556B2F;
     --text-brown: #967259;
-    --accent-gold: #D4AF37;
+    --accent-gold: #D4AF77;
     --font-family: 'Montserrat', sans-serif;
 }
 
@@ -229,13 +229,31 @@ h2 {
     text-align: left;
 }
 
+/* ########################################## */
+/* ## ESTILOS MODIFICADOS ## */
+/* ########################################## */
 
-/* --- ESTILOS "NO REGALAR" (MODIFICADOS PARA SER MÁS SUTILES) --- */
+/* --- ESTILOS NUEVOS PARA ICONOS PNG --- */
+.icon-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Espacio entre iconos */
+    margin-top: 2rem;
+    margin-bottom: 0.1rem;
+}
+.icon-wrapper img {
+    height: 20px; /* Tamaño de los iconos */
+    width: 20px;
+    object-fit: contain;
+    /* Efecto sutil para que coincida con el tema */
+    opacity: 0.8;
+}
+
+/* --- ESTILOS "NO REGALAR" (MÁS COMPACTOS) --- */
 .no-gift-list {
     display: grid;
-    /* En PC se verá en columnas automáticas (como antes) */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.5rem 1.5rem; /* Menos espacio vertical, más horizontal */
+    gap: 0.25rem 1.5rem; /* MODIFICADO: Espacio vertical MUY reducido */
     list-style-type: none;
     padding: 0;
     margin-top: 2rem;
@@ -243,27 +261,22 @@ h2 {
 }
 
 .no-gift-list li {
-    /* Estilos "ruidosos" eliminados: */
-    /* background-color: var(--bg-color); */
-    /* border-left: 5px solid var(--primary-green); */
-    
-    /* Nuevos estilos más sutiles: */
     position: relative;
-    padding: 0.5rem 0 0.5rem 1.25rem; /* Padding reducido y espacio para el bullet */
-    font-weight: 400; /* Fuente más ligera */
+    padding: 0.25rem 0 0.25rem 1.25rem; /* MODIFICADO: Padding vertical reducido */
+    font-weight: 400; 
     color: var(--text-brown);
+    line-height: 0.5; /* MODIFICADO: Interlineado interno reducido */
 }
 
-/* Añadimos un "bullet" (viñeta) personalizado con el color del tema */
 .no-gift-list li::before {
     content: "•";
     position: absolute;
     left: 0;
-    top: 0.5rem;
+    top: 0.25rem; /* MODIFICADO: Alineado con el nuevo padding */
     color: var(--primary-green);
     font-weight: bold;
     font-size: 1.2em;
-    line-height: 1;
+    line-height: 0.5; /* MODIFICADO: Alineado con el nuevo line-height */
 }
 
 
@@ -289,10 +302,8 @@ footer {
         border-width: 3px;
     }
 
-    /* --- ¡NUEVA REGLA PARA MÓVIL! --- */
-    /* Forzamos la lista a 2 columnas en pantallas pequeñas */
     .no-gift-list {
-        grid-template-columns: 1fr 1fr; /* 2 columnas fijas */
-        gap: 0.25rem 1rem; /* Espaciado más ajustado */
+        grid-template-columns: 1fr 1fr; 
+        gap: 0.1rem 1rem; /* MODIFICADO: Aún más apretado en móvil */
     }
 }
