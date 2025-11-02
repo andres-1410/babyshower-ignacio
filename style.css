@@ -242,8 +242,8 @@ h2 {
     margin-bottom: 1.0rem;
 }
 .icon-wrapper img {
-    height: 30px; /* Tamaño de los iconos */
-    width: 30px;
+    height: 40px; /* Tamaño de los iconos */
+    width: 40px;
     object-fit: contain;
     /* Efecto sutil para que coincida con el tema */
     opacity: 0.8;
