@@ -239,11 +239,11 @@ h2 {
     justify-content: center;
     gap: 1.5rem; /* Espacio entre iconos */
     margin-top: 2rem;
-    margin-bottom: 0.1rem;
+    margin-bottom: 1.0rem;
 }
 .icon-wrapper img {
-    height: 20px; /* Tamaño de los iconos */
-    width: 20px;
+    height: 30px; /* Tamaño de los iconos */
+    width: 30px;
     object-fit: contain;
     /* Efecto sutil para que coincida con el tema */
     opacity: 0.8;
